@@ -36,6 +36,7 @@ This system abandons simple static CRUD notifications in favor of an **Active Ev
 *   **Expandable Data Cards**: Clean, glass-morphism aesthetic cards displaying nested priority strings, status mappings, and timestamp data.
 
 ---
+![AnnaPay Core Functionalities Summary](./public/Image4.png)
 
 ## 🚀 Local Setup & Installation
 
