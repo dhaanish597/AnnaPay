@@ -1,0 +1,40 @@
+{
+    "SALARY_PROCESSED": {
+        "message": "Payroll successfully processed for {department} at {college_name}.",
+        "targetRoles": [
+            "FINANCE_OFFICER",
+            "FACULTY"
+        ]
+    },
+    "PAYROLL_FAILED": {
+        "message": "Payroll processing failed for {college_name}. Immediate attention required.",
+        "targetRoles": [
+            "FINANCE_OFFICER",
+            "IT_SUPPORT"
+        ]
+    },
+    "APPROVAL_PENDING": {
+        "message": "Pending approval for payroll/funds in {department} department at {college_name}. Please review.",
+        "targetRoles": [
+            "COLLEGE_ADMIN",
+            "FINANCE_OFFICER"
+        ]
+    },
+    "PAYMENT_TRANSFERRED": {
+        "message": "Payment successfully transferred to the designated accounts for {department} at {college_name}.",
+        "targetRoles": [
+            "COLLEGE_ADMIN",
+            "FINANCE_OFFICER"
+        ]
+    },
+    "SYSTEM_ERROR": {
+        "message": "System error detected regarding {department} operations at {college_name}. Check logs.",
+        "targetRoles": [
+            "IT_SUPPORT"
+        ]
+    },
+    "DEFAULT": {
+        "message": "Event occurred: {event_type} for {department} at {college_name}.",
+        "targetRoles": []
+    }
+}
