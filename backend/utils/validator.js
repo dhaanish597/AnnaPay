@@ -6,8 +6,8 @@ export const validateEventPayload = (payload) => {
 
     const { event_type, college_id, department, priority } = payload;
 
-    if (!event_type || !college_id || !department || !priority) {
-        return 'Missing required fields: event_type, college_id, department, priority';
+    if (!event_type || !college_id || !department) {
+        return 'Missing required fields: event_type, college_id, department';
     }
 
     const validEventTypes = [
@@ -23,7 +23,7 @@ export const validateEventPayload = (payload) => {
         return `Invalid event_type. Must be one of: ${validEventTypes.join(', ')}`;
     }
 
-    if (!validPriorities.includes(priority)) {
+    if (priority && !validPriorities.includes(priority)) {
         return 'Invalid priority. Must be HIGH, MEDIUM, or LOW';
     }
 

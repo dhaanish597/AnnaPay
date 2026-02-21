@@ -1,159 +1,87 @@
-# Payroll Notification System
+# AnnaPay Event Engine
 
-A full-stack notification system for payroll applications with role-based routing, priority levels, and real-time updates.
+Welcome to the **AnnaPay Event Engine**, a robust, real-time, event-driven notification matrix explicitly designed for Anna University's administrative, financial, and faculty ecosystem.
 
-## Features
+The system natively bridges autonomous **Backend Node.js CRON scheduling**, **Dynamic Rule Engines**, and **Persistent Supabase PostgREST Architecture** directly to a **React (Vite) Frontend** using live **WebSockets (Socket.io)**. 
 
-- Role-based notification routing (Admin, HR, Finance)
-- Priority levels (HIGH, MEDIUM, LOW)
-- Real-time notification updates
-- Filter notifications by priority, status, and role
-- Clean admin dashboard
-- REST API endpoint for sending notifications
+---
 
-## Tech Stack
+## 🏗 System Architecture & Approach
 
-**Backend:**
-- Supabase (Database + Edge Functions)
-- PostgreSQL with Row Level Security
-- REST API
+This system abandons simple static CRUD notifications in favor of an **Active Event-Driven Pipeline**. When an event triggers anywhere within the AnnaPay ecosystem (e.g., `PAYROLL_FAILED` or `SALARY_PROCESSED`), the payload is routed through a series of intelligent backend intercepts:
 
-**Frontend:**
-- React 18 with TypeScript
-- Tailwind CSS
-- Vite
-- Lucide React (icons)
+1.  **Rule Engine Intercept**: Overrides requested priorities autonomously. If a user triggers a `PAYROLL_FAILED` event as "LOW" priority, the backend Rule Engine instantly destroys the request and forces it to **HIGH Priority** globally while dynamically adding `IT_SUPPORT` to the routing matrix.
+2.  **Message Templating**: Injects dynamic context variables (`Target College`, `Target Department`) into secure JSON string templates so identical payloads format differently based on contextual delivery.
+3.  **Role-Based Matrix Routing**: Validates whether the alert goes to a `UNIVERSITY_ADMIN` (receives everything) vs a `COLLEGE_ADMIN` vs `FACULTY`.
+4.  **Omni-Channel Dispatch**: 
+    - **Live WebSockets**: Pushes the alert straight into the React dashboard of active users natively without page refreshes.
+    - **Email Mocking / Fallbacks**: Configurable adapter architecture ready to dispatch SendGrid/AWS SES fallbacks.
+5.  **Autonomous Cron SLA Escalation**: If a `HIGH` priority alert sits in the database unresolved for over 3 hours, a background Node-Cron sweeper intercepts it, tags it `[ESCALATED]`, forces it back through the dispatch cycle, and alerts the `UNIVERSITY_ADMIN`.
 
-## Project Structure
+---
 
-```
-project/
-├── supabase/
-│   └── functions/
-│       └── notify/
-│           └── index.ts          # POST /notify endpoint
-├── src/
-│   ├── components/
-│   │   ├── NotificationDashboard.tsx
-│   │   └── NotificationForm.tsx
-│   ├── lib/
-│   │   └── supabase.ts           # Supabase client
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-└── README.md
-```
+## ✨ Core Features
 
-## Setup
+*   **Secure Authorization Clearances**: Built-in contextual authentication. `FACULTY` logs merely show events targeting their department, whereas `UNIVERSITY_ADMIN` roles operate with absolute clearance and visibility. (Defaults to `COLLEGE_ADMIN` on open).
+*   **Live Metrics Analytics Engine**: Top-level macro analytical cards summarizing Total Event Flow, Resolution percentages, Escalation volumes, and a live Recharts bar graph mapping the last 7-days of system frequency securely bound to the user's auth-clearance.
+*   **Scheduled Dispatch Constraints**: Send alerts immediately, or bind them to a future `Datetime`. The API will safely park the event in Supabase and gracefully dispatch it through WebSockets later via the autonomous node-cron engine.
+*   **SLA Auto-Escalation**: Strict automated sweeps handling priority breaches natively so critical technical/financial faults never get ignored.
+*   **Immutable Audit Trail**: Every modification—whether creating an alert, marking it as resolved, pushing it via a scheduler, or escalating it—generates an undeletable, timestamped Audit SQL map tracking the exact `Actor_Identifier` and `Payload JSON`. 
+*   **Expandable Data Cards**: Clean, glass-morphism aesthetic cards displaying nested priority strings, status mappings, and timestamp data.
 
-1. Create a `.env` file with your Supabase credentials:
+---
 
+## 🚀 Local Setup & Installation
+
+Follow these steps to spin up the entire FullStack environment on your local machine.
+
+### 1. Prerequisites 
+- **Node.js**: `v18+` (Required for full compatibility)
+- **Supabase Account**: You require an active cloud or local PostgreSQL instance.
+
+### 2. Database Initialization (Supabase)
+Run the migration SQL scripts located in the `supabase/migrations/` folder directly inside your Supabase SQL Editor. They **MUST** be run in chronological order:
+1. `20260221124500_create_notifications_table.sql`
+2. `20260221125200_anna_university_roles.sql`
+3. `20260221143500_add_escalation_logic.sql`
+4. `20260221144000_add_scheduling_logic.sql`
+5. `20260221145000_add_audit_trail.sql` *(Required last for foreign keys)*
+
+### 3. Environment Variables
+Create a `.env` file natively in the root directory **AND** the `/backend` directory containing your keys:
 ```env
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+# Root directory (.env) for Vite React Frontend
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# /backend directory (.env) for Node Express Server
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+PORT=3000
 ```
 
-2. Install dependencies:
+### 4. Boot Sequence
 
+**Start the Backend Microservice (Terminal 1):**
+```bash
+cd backend
+npm install
+npm start
+```
+*You should see outputs proving the Express API is mounted on port `3000`, the Cron Scheduler is running, and WebSockets are actively listening.*
+
+**Start the React Vite Frontend (Terminal 2):**
 ```bash
 npm install
-```
-
-3. Start the development server:
-
-```bash
 npm run dev
 ```
+*The UI will mount at `http://localhost:5173`.*
 
-## API Usage
+---
 
-### POST /notify
-
-Send a notification to a specific role with priority.
-
-**Endpoint:**
-```
-POST https://your-project.supabase.co/functions/v1/notify
-```
-
-**Headers:**
-```
-Authorization: Bearer YOUR_ANON_KEY
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "role": "Admin",
-  "priority": "HIGH",
-  "message": "Monthly payroll processed successfully"
-}
-```
-
-**Valid Values:**
-- `role`: "Admin", "HR", "Finance"
-- `priority`: "HIGH", "MEDIUM", "LOW"
-- `message`: Any text string
-
-**Response:**
-```json
-{
-  "success": true,
-  "notification": {
-    "id": "uuid",
-    "role": "Admin",
-    "priority": "HIGH",
-    "message": "Monthly payroll processed successfully",
-    "status": "sent",
-    "created_at": "2024-01-01T12:00:00Z"
-  },
-  "message": "Notification created successfully"
-}
-```
-
-## Database Schema
-
-The system uses a single `notifications` table:
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid | Primary key |
-| role | text | Target role (Admin, HR, Finance) |
-| priority | text | Priority level (HIGH, MEDIUM, LOW) |
-| message | text | Notification message |
-| status | text | Delivery status (sent, failed) |
-| created_at | timestamptz | Creation timestamp |
-
-## Security
-
-- Row Level Security (RLS) enabled on all tables
-- Authenticated users can view and create notifications
-- Edge function accessible without JWT for external integrations
-- CORS enabled for cross-origin requests
-
-## Features Showcase
-
-1. **Create Notifications**: Use the form at the top to create new notifications
-2. **Real-time Updates**: Notifications appear instantly without page refresh
-3. **Filter by Priority**: View HIGH, MEDIUM, or LOW priority notifications
-4. **Filter by Status**: View sent or failed notifications
-5. **Filter by Role**: View notifications for specific roles (Admin, HR, Finance)
-6. **Visual Indicators**: Color-coded badges for priorities, roles, and status
-
-## Development
-
-Build for production:
-```bash
-npm run build
-```
-
-Type check:
-```bash
-npm run typecheck
-```
-
-Lint:
-```bash
-npm run lint
-```
+## 🧪 Testing the Matrix
+Once both servers are running:
+1. Open up `localhost:5173`. You will instantly be logged in as a simulated `COLLEGE_ADMIN`.
+2. Generate an event utilizing the UI Form as a `Scheduled Target ⏳`, setting the time for 1 minute in the future. 
+3. Watch the Node terminal safely intercept the log seamlessly and blast the socket interface exactly on time.
+4. Click the **View Audit Trail** button on the rendered card to parse the generated chronological tracking data!

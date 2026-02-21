@@ -11,9 +11,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export interface Notification {
   id: string;
-  role: 'Admin' | 'HR' | 'Finance';
+  event_type: string;
+  recipient_role: 'UNIVERSITY_ADMIN' | 'COLLEGE_ADMIN' | 'FINANCE_OFFICER' | 'FACULTY' | 'IT_SUPPORT';
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
   message: string;
-  status: 'sent' | 'failed';
-  created_at: string;
+  college?: string;
+  status: 'sent' | 'failed' | 'pending' | 'resolved' | 'escalated' | 'scheduled';
+  timestamp: string;
 }
