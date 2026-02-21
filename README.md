@@ -27,6 +27,7 @@ This system abandons simple static CRUD notifications in favor of an **Active Ev
 ## ✨ Core Features
 
 ![AnnaPay Core Functionalities Summary](./public/Image3.png)
+![AnnaPay Audit Logs and UI Components](./public/image4.png)
 
 *   **Secure Authorization Clearances**: Built-in contextual authentication. `FACULTY` logs merely show events targeting their department, whereas `UNIVERSITY_ADMIN` roles operate with absolute clearance and visibility. (Defaults to `COLLEGE_ADMIN` on open).
 *   **Live Metrics Analytics Engine**: Top-level macro analytical cards summarizing Total Event Flow, Resolution percentages, Escalation volumes, and a live Recharts bar graph mapping the last 7-days of system frequency securely bound to the user's auth-clearance.
@@ -36,8 +37,6 @@ This system abandons simple static CRUD notifications in favor of an **Active Ev
 *   **Expandable Data Cards**: Clean, glass-morphism aesthetic cards displaying nested priority strings, status mappings, and timestamp data.
 
 ---
-![AnnaPay Core Functionalities Summary](./public/Image4.png)
-
 ## 🚀 Local Setup & Installation
 
 Follow these steps to spin up the entire FullStack environment on your local machine.
