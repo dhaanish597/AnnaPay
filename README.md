@@ -4,9 +4,13 @@ Welcome to the **AnnaPay Event Engine**, a robust, real-time, event-driven notif
 
 The system natively bridges autonomous **Backend Node.js CRON scheduling**, **Dynamic Rule Engines**, and **Persistent Supabase PostgREST Architecture** directly to a **React (Vite) Frontend** using live **WebSockets (Socket.io)**. 
 
+![AnnaPay Event Engine Dashboard Overview](./public/Image1.png)
+
 ---
 
 ## 🏗 System Architecture & Approach
+
+![AnnaPay Pipeline Routing Flow](./public/Image2.png)
 
 This system abandons simple static CRUD notifications in favor of an **Active Event-Driven Pipeline**. When an event triggers anywhere within the AnnaPay ecosystem (e.g., `PAYROLL_FAILED` or `SALARY_PROCESSED`), the payload is routed through a series of intelligent backend intercepts:
 
@@ -21,6 +25,8 @@ This system abandons simple static CRUD notifications in favor of an **Active Ev
 ---
 
 ## ✨ Core Features
+
+![AnnaPay Core Functionalities Summary](./public/Image3.png)
 
 *   **Secure Authorization Clearances**: Built-in contextual authentication. `FACULTY` logs merely show events targeting their department, whereas `UNIVERSITY_ADMIN` roles operate with absolute clearance and visibility. (Defaults to `COLLEGE_ADMIN` on open).
 *   **Live Metrics Analytics Engine**: Top-level macro analytical cards summarizing Total Event Flow, Resolution percentages, Escalation volumes, and a live Recharts bar graph mapping the last 7-days of system frequency securely bound to the user's auth-clearance.
